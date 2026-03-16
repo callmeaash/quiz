@@ -1,6 +1,7 @@
 <script setup>
 import Category from '@/components/Category.vue';
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 
 let selected = ref('');
 
@@ -34,7 +35,22 @@ const categories = [
                 />
             </div>
 
-            <button class="block mx-auto mt-10 lg:mt-16 text-xl text-white bg-[#4683df] border-b-4 border-[#2c69cb] py-3 px-16 cursor-pointer hover:bg-[#1162d1] rounded disabled:cursor-not-allowed" :disabled="!selected">Start Quiz</button>
+            <RouterLink
+                v-if="selected"
+                :to="{ name: 'quiz', params: { category: selected } }"
+                @click.prevent="!selected && $event.preventDefault()"
+                :class="{
+                  'opacity-50 cursor-not-allowed pointer-events-none': !selected,
+                  'hover:bg-[#1162d1]': selected
+                }"
+                class="block text-center w-64 mx-auto mt-10 lg:mt-16 text-xl text-white bg-[#4683df] border-b-4 border-[#2c69cb] py-3 rounded"
+            >
+              Start Quiz
+            </RouterLink>
+
+            <div v-else class="block text-center w-64 mx-auto mt-10 lg:mt-16 text-xl text-white bg-[#4683df] border-b-4 border-[#2c69cb] py-3 rounded opacity-50 cursor-not-allowed">
+              Select a category
+            </div>
         </main>
     </div>
 </template>
