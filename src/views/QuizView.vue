@@ -1,7 +1,8 @@
 <script setup>
 import { useQuizStore } from '@/stores/quizStore.js';
 import { useTimer } from '@/composables/timer.js';
-import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { computed, watch } from 'vue';
 
 import QuizHeader from '@/components/QuizHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
@@ -11,6 +12,7 @@ import AnswerOptions from '@/components/AnswerOptions.vue';
 import NextButton from '@/components/NextButton.vue';
 
 const quiz = useQuizStore();
+const router = useRouter();
 
 const props = defineProps({
     category: String
@@ -32,6 +34,14 @@ const formattedTime = computed(() => {
 const handleSelectAnswer = (index) => {
     quiz.selectAnswer(index);
 };
+
+// Watch for quiz completion and navigate to results
+watch(() => quiz.isCompleted, (isCompleted) => {
+    if (isCompleted) {
+        stopTimer();
+        router.push('/results');
+    }
+});
 
 </script>
 
